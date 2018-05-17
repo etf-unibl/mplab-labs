@@ -48,4 +48,6 @@ int16_t main(void)
         LATDbits.LATD0 = 0;
         __delay_ms(500);
     }
+    
+    CloseTimer1();
 }

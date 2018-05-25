@@ -15,8 +15,10 @@
 
 #include <stdint.h>        /* Includes uint16_t definition   */
 #include <stdbool.h>       /* Includes true/false definition */
+#include <stddef.h>
 
 #include <timer.h>
+#include "timerctrl.h"
 
 /******************************************************************************/
 /* Interrupt Vector Options                                                   */
@@ -125,9 +127,12 @@
 /* Interrupt Routines                                                         */
 /******************************************************************************/
 
+Callback pfnCallback = NULL;
+
 void __attribute__((interrupt,auto_psv)) _T1Interrupt(void)
 {
-    LATDbits.LATD1 ^= 1;    /* toggle LED on RD1 */
+    if (pfnCallback != NULL)
+        (*pfnCallback)();
     WriteTimer1(0);
     IFS0bits.T1IF = 0;    /* Clear Timer interrupt flag */
 }
